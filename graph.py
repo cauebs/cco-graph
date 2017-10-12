@@ -1,5 +1,5 @@
 from collections import defaultdict
-
+from copy import deepcopy
 
 class Graph:
     def __init__(self, vertices, edges=None):
@@ -86,3 +86,20 @@ class Graph:
                 for w in self.successors(v):
                     pending.add(w)
         return True
+
+    def topological_order(self):
+        ordered_list = []
+        zero_indegree = { v for v in self.vertices if self.indegree(v) == 0 }
+
+        reversed_edges = deepcopy(self._reversed_edges)
+        while len(zero_indegree) > 0:
+            vertex = zero_indegree.pop()
+            ordered_list.append(vertex)
+
+            for v in self._edges[vertex]:
+                reversed_edges[v].discard(vertex)
+                if len(reversed_edges[v]) == 0:
+                    zero_indegree.add(v)
+
+        return ordered_list
+
