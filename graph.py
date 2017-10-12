@@ -30,8 +30,9 @@ class Graph:
         return len(self.vertices)
 
     def one_vertex(self):
-        for v in self.vertices:
-            return v
+        v = self.vertices.pop()
+        self.vertices.add(v)
+        return v
 
     def successors(self, vertex):
         return self._edges[vertex]
