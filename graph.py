@@ -2,12 +2,10 @@ from collections import defaultdict
 
 
 class Graph:
-    def __init__(self, vertices, edges=None, directed=True):
+    def __init__(self, vertices, edges=None):
         self.vertices = set(vertices)
-        self._directed = directed
-
-        self._successors = defaultdict(set)
-        self._predecessors = defaultdict(set)
+        self._edges = defaultdict(set)
+        self._reversed_edges = defaultdict(set)
         for (v, w) in edges or {}:
             self.add_edge(v, w)
 
@@ -15,30 +13,18 @@ class Graph:
         self.vertices.add(vertex)
 
     def remove_vertex(self, vertex):
-        for w in self._predecessors[vertex]:
+        self._edges.pop(vertex)
+        for w in self._reversed_edges[vertex]:
             self.remove_edge(w, vertex)
-        for w in self._successors[vertex]:
-            self.remove_edge(vertex, w)
         self.vertices.remove(vertex)
 
     def add_edge(self, v, w):
-        if not (v in self.vertices and w in self.vertices):
-            raise KeyError
-
-        self._successors[v].add(w)
-        self._predecessors[w].add(v)
-
-        if not self._directed:
-            self._successors[w].add(v)
-            self._predecessors[v].add(w)
+        self._edges[v].add(w)
+        self._reversed_edges[w].add(v)
 
     def remove_edge(self, v, w):
-        self._successors[v].remove(w)
-        self._predecessors[w].remove(v)
-
-        if not self._directed:
-            self._successors[w].remove(v)
-            self._predecessors[v].remove(w)
+        self._edges[v].remove(w)
+        self._reversed_edges[w].remove(v)
 
     def __len__(self):
         return len(self.vertices)
@@ -48,20 +34,20 @@ class Graph:
             return v
 
     def successors(self, vertex):
-        return self._successors[vertex]
+        return self._edges[vertex]
 
     def predecessors(self, vertex):
-        return self._predecessors[vertex]
+        return self._reversed_edges[vertex]
 
     def adjacents(self, vertex):
-        return set.union(self._successors[vertex],
-                         self._predecessors[vertex])
+        return set.union(self.predecessors(vertex),
+                         self.successors(vertex))
 
     def indegree(self, vertex):
-        return len(self._predecessors[vertex])
+        return len(self.predecessors(vertex))
 
     def outdegree(self, vertex):
-        return len(self._successors[vertex])
+        return len(self.successors(vertex))
 
     def degree(self, vertex):
         return len(self.adjacents(vertex))
@@ -80,7 +66,7 @@ class Graph:
             v = pending.pop()
             if v not in closure:
                 closure.add(v)
-                for w in self._successors[v]:
+                for w in self.successors(v):
                     pending.add(w)
         return closure
 
@@ -96,20 +82,6 @@ class Graph:
                 return False
             else:
                 visited.add(v)
-                for w in self._successors[v]:
+                for w in self.successors(v):
                     pending.add(w)
         return True
-
-
-if __name__ == '__main__':
-    vertices = {(x, y)
-                for x in range(8)
-                for y in range(8)}
-
-    edges = {(v, w)
-             for v in vertices
-             for w in vertices
-             if abs(v[0] - w[0]) == 1 and abs(v[1] - w[1]) == 2
-             or abs(v[0] - w[0]) == 2 and abs(v[1] - w[1]) == 1}
-
-    g = Graph(vertices, edges, directed=False)
