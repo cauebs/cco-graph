@@ -48,11 +48,9 @@ class Graph:
         self.vertices.add(v)
         return v
 
-    @property
     def successors(self, vertex):
         return self._successors[vertex]
 
-    @property
     def predecessors(self, vertex):
         return self._predecessors[vertex]
 
