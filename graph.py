@@ -44,9 +44,8 @@ class Graph:
         return len(self.vertices)
 
     def one_vertex(self):
-        v = self.vertices.pop()
-        self.vertices.add(v)
-        return v
+        for v in self.vertices:
+            return v
 
     def successors(self, vertex):
         return self._successors[vertex]
