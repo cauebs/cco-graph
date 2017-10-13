@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, deque
 from copy import deepcopy
 
 class Graph:
@@ -102,4 +102,21 @@ class Graph:
                     zero_indegree.add(v)
 
         return ordered_list
+
+    def depth_first(self, root):
+        stack = [ root ]
+        in_order = []
+        discovered = set()
+
+        while len(stack) > 0:
+            v = stack.pop()
+            if v not in discovered:
+                discovered.add(v)
+                in_order.append(v)
+                for w in self._edges[v]:
+                    stack.append(w)
+
+        return in_order
+
+
 
