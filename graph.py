@@ -118,5 +118,17 @@ class Graph:
 
         return in_order
 
+    def breadth_first(self, root):
+        queue = [ root ]
+        in_order = [ root ]
+        discovered = set(in_order)
 
+        while len(queue) > 0:
+            v = queue.pop(0)
+            for w in self._edges[v]:
+                if w not in discovered:
+                    discovered.add(w)
+                    in_order.append(w)
+                    queue.append(w)
 
+        return in_order
