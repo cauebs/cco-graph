@@ -4,7 +4,7 @@ from typing import NamedTuple, Tuple
 class Course(NamedTuple):
     code: str
     name: str
-    bla: int
+    hours: int
     requirements: Tuple['Course']
 
     def __repr__(self):
