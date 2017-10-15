@@ -87,21 +87,22 @@ class Graph:
                     pending.add(w)
         return True
 
-    def topological_order(self):
-        ordered_list = []
-        zero_indegree = { v for v in self.vertices if self.indegree(v) == 0 }
+    def topological_sorting(self):
+        sorting = []
+        done = set()
+        available = {v for v in self.vertices
+                     if not self.predecessors(v)}
 
-        reversed_edges = deepcopy(self._reversed_edges)
-        while len(zero_indegree) > 0:
-            vertex = zero_indegree.pop()
-            ordered_list.append(vertex)
+        while available:
+            v = available.pop()
+            sorting.append(v)
+            done.add(v)
 
-            for v in self._edges[vertex]:
-                reversed_edges[v].discard(vertex)
-                if len(reversed_edges[v]) == 0:
-                    zero_indegree.add(v)
+            for w in self.successors(v):
+                if self.predecessors(w).issubset(done):
+                    available.add(w)
 
-        return ordered_list
+        return sorting
 
     def depth_first(self, root=None):
         root = root or self.one_vertex()
