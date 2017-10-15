@@ -1,5 +1,5 @@
 from collections import defaultdict, deque
-from copy import deepcopy
+
 
 class Graph:
     def __init__(self, vertices, edges=None):
@@ -103,29 +103,31 @@ class Graph:
 
         return ordered_list
 
-    def depth_first(self, root):
-        stack = [ root ]
+    def depth_first(self, root=None):
+        root = root or self.one_vertex()
+        stack = deque([root])
         in_order = []
         discovered = set()
 
-        while len(stack) > 0:
+        while stack:
             v = stack.pop()
             if v not in discovered:
                 discovered.add(v)
                 in_order.append(v)
-                for w in self._edges[v]:
+                for w in self.successors(v):
                     stack.append(w)
 
         return in_order
 
-    def breadth_first(self, root):
-        queue = [ root ]
-        in_order = [ root ]
-        discovered = set(in_order)
+    def breadth_first(self, root=None):
+        root = root or self.one_vertex()
+        queue = deque([root])
+        in_order = [root]
+        discovered = {root}
 
-        while len(queue) > 0:
-            v = queue.pop(0)
-            for w in self._edges[v]:
+        while queue:
+            v = queue.popleft()
+            for w in self.successors(v):
                 if w not in discovered:
                     discovered.add(w)
                     in_order.append(w)
