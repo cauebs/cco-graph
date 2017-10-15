@@ -14,6 +14,7 @@ class Graph:
 
     def remove_vertex(self, vertex):
         self._edges.pop(vertex)
+        self._reversed_edges.pop(vertex)
         for w in self._reversed_edges[vertex]:
             self.remove_edge(w, vertex)
         self.vertices.remove(vertex)
