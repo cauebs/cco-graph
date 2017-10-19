@@ -13,10 +13,9 @@ class Graph:
         self.vertices.add(vertex)
 
     def remove_vertex(self, vertex):
-        self._edges.pop(vertex)
-        self._reversed_edges.pop(vertex)
-        for w in self._reversed_edges[vertex]:
-            self.remove_edge(w, vertex)
+        for w in self._edges.pop(vertex, []):
+            self.remove_edge(vertex, w)
+        self._reversed_edges.pop(vertex, None)
         self.vertices.remove(vertex)
 
     def add_edge(self, v, w):
