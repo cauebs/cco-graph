@@ -1,31 +1,41 @@
-from collections import defaultdict, deque
+from collections import deque
 
 
 class Digraph:
-    def __init__(self, vertices, edges=None):
-        self.vertices = set(vertices)
-        self._successors = defaultdict(set)
-        self._predecessors = defaultdict(set)
-        for (v, w) in edges or {}:
+    def __init__(self, vertices, edges):
+        self._successors = {}
+        self._predecessors = {}
+        for v in vertices:
+            self.add_vertex(v)
+        for (v, w) in edges:
             self.add_edge(v, w)
 
-    def add_vertex(self, vertex):
-        self.vertices.add(vertex)
+    def add_vertex(self, v):
+        self._successors[v] = set()
+        self._predecessors[v] = set()
 
-    def remove_vertex(self, vertex):
-        self._successors.pop(vertex)
-        self._predecessors.pop(vertex)
-        for w in self._predecessors[vertex]:
-            self.remove_edge(w, vertex)
-        self.vertices.remove(vertex)
+    def remove_vertex(self, v):
+        self._successors.pop(v)
+        for w in self._predecessors[v]:
+            self.remove_edge(w, v)
+        self._predecessors.pop(v)
+        self.vertices.remove(v)
 
     def add_edge(self, v, w):
+        if not (v in self._successors and w in self._predecessors):
+            raise KeyError
         self._successors[v].add(w)
         self._predecessors[w].add(v)
 
     def remove_edge(self, v, w):
+        if not (v in self and w in self):
+            raise KeyError
         self._successors[v].remove(w)
         self._predecessors[w].remove(v)
+
+    @property
+    def vertices(self):
+        return set(self._successors.keys())
 
     def __len__(self):
         return len(self.vertices)
@@ -35,28 +45,27 @@ class Digraph:
 
     def one_vertex(self):
         v = self.vertices.pop()
-        self.vertices.add(v)
         return v
 
-    def successors(self, vertex):
-        return self._successors[vertex]
+    def successors(self, v):
+        return self._successors[v]
 
-    def predecessors(self, vertex):
-        return self._predecessors[vertex]
+    def predecessors(self, v):
+        return self._predecessors[v]
 
-    def indegree(self, vertex):
-        return len(self.predecessors(vertex))
+    def indegree(self, v):
+        return len(self.predecessors(v))
 
-    def outdegree(self, vertex):
-        return len(self.successors(vertex))
+    def outdegree(self, v):
+        return len(self.successors(v))
 
     def is_complete(self):
         return all(self.degree(v) >= len(self) - 1
                    for v in self.vertices)
 
-    def transitive_closure(self, vertex):
+    def transitive_closure(self, v):
         closure = set()
-        pending = {vertex}
+        pending = {v}
         while pending:
             v = pending.pop()
             if v not in closure:

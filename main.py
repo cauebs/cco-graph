@@ -1,4 +1,4 @@
-from graph import Graph
+from graph import Digraph
 from cco import Curriculum
 
 
@@ -30,7 +30,7 @@ def semesters(graph, done=None, max_hours=30):
 if __name__ == '__main__':
     vertices = {c.value for c in Curriculum}
     edges = {(r, c) for c in vertices for r in c.requirements}
-    cco_graph = Graph(vertices, edges)
+    cco_graph = Digraph(vertices, edges)
 
     for i, semester in enumerate(semesters(cco_graph)):
         print(f'{i+1}º Semestre ({sum(c.hours for c in semester)} horas)')
