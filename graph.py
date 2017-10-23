@@ -40,6 +40,7 @@ class Digraph:
     def __len__(self):
         return len(self.vertices)
 
+    @property
     def order(self):
         return len(self)
 
