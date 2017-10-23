@@ -22,13 +22,13 @@ class Digraph:
         self.vertices.remove(v)
 
     def add_edge(self, v, w):
-        if not (v in self._successors and w in self._predecessors):
+        if not (v in self.vertices and w in self.vertices):
             raise KeyError
         self._successors[v].add(w)
         self._predecessors[w].add(v)
 
     def remove_edge(self, v, w):
-        if not (v in self and w in self):
+        if not (v in self.vertices and w in self.vertices):
             raise KeyError
         self._successors[v].remove(w)
         self._predecessors[w].remove(v)
