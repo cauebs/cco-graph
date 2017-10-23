@@ -1,11 +1,11 @@
 from collections import defaultdict, deque
 
 
-class Graph:
+class Digraph:
     def __init__(self, vertices, edges=None):
         self.vertices = set(vertices)
-        self._edges = defaultdict(set)
-        self._reversed_edges = defaultdict(set)
+        self._successors = defaultdict(set)
+        self._predecessors = defaultdict(set)
         for (v, w) in edges or {}:
             self.add_edge(v, w)
 
@@ -13,18 +13,19 @@ class Graph:
         self.vertices.add(vertex)
 
     def remove_vertex(self, vertex):
-        for w in self._edges.pop(vertex, []):
-            self.remove_edge(vertex, w)
-        self._reversed_edges.pop(vertex, None)
+        self._successors.pop(vertex)
+        self._predecessors.pop(vertex)
+        for w in self._predecessors[vertex]:
+            self.remove_edge(w, vertex)
         self.vertices.remove(vertex)
 
     def add_edge(self, v, w):
-        self._edges[v].add(w)
-        self._reversed_edges[w].add(v)
+        self._successors[v].add(w)
+        self._predecessors[w].add(v)
 
     def remove_edge(self, v, w):
-        self._edges[v].remove(w)
-        self._reversed_edges[w].remove(v)
+        self._successors[v].remove(w)
+        self._predecessors[w].remove(v)
 
     def __len__(self):
         return len(self.vertices)
@@ -35,26 +36,16 @@ class Graph:
         return v
 
     def successors(self, vertex):
-        return self._edges[vertex]
+        return self._successors[vertex]
 
     def predecessors(self, vertex):
-        return self._reversed_edges[vertex]
-
-    def adjacents(self, vertex):
-        return set.union(self.predecessors(vertex),
-                         self.successors(vertex))
+        return self._predecessors[vertex]
 
     def indegree(self, vertex):
         return len(self.predecessors(vertex))
 
     def outdegree(self, vertex):
         return len(self.successors(vertex))
-
-    def degree(self, vertex):
-        return len(self.adjacents(vertex))
-
-    def is_regular(self):
-        return len({self.degree(v) for v in self.vertices}) == 1
 
     def is_complete(self):
         return all(self.degree(v) >= len(self) - 1
