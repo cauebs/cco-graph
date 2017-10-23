@@ -17,6 +17,8 @@ class Digraph:
     def remove_vertex(self, v):
         for w in self._predecessors[v]:
             self._successors[w].remove(v)
+        for w in self._successors[v]:
+            self._predecessors[w].remove(v)
         self._successors.pop(v)
         self._predecessors.pop(v)
 
