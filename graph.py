@@ -30,6 +30,9 @@ class Digraph:
     def __len__(self):
         return len(self.vertices)
 
+    def order(self):
+        return len(self)
+
     def one_vertex(self):
         v = self.vertices.pop()
         self.vertices.add(v)
