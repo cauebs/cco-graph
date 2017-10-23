@@ -15,11 +15,10 @@ class Digraph:
         self._predecessors[v] = set()
 
     def remove_vertex(self, v):
-        self._successors.pop(v)
         for w in self._predecessors[v]:
-            self.remove_edge(w, v)
+            self._successors[w].remove(v)
+        self._successors.pop(v)
         self._predecessors.pop(v)
-        self.vertices.remove(v)
 
     def add_edge(self, v, w):
         if not (v in self.vertices and w in self.vertices):
