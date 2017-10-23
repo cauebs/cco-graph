@@ -1,5 +1,5 @@
 from graph import Graph
-from curriculum import courses
+from cco import Curriculum
 
 
 def semesters(graph, done=None, max_hours=30):
@@ -28,12 +28,12 @@ def semesters(graph, done=None, max_hours=30):
 
 
 if __name__ == '__main__':
-    cco = Graph(courses, {(r, c)
-                          for c in courses
-                          for r in c.requirements})
+    vertices = {c.value for c in Curriculum}
+    edges = {(r, c) for c in vertices for r in c.requirements}
+    cco_graph = Graph(vertices, edges)
 
-    for semester in semesters(cco):
-        print(sum(c.hours for c in semester))
+    for i, semester in enumerate(semesters(cco_graph)):
+        print(f'{i+1}º Semestre ({sum(c.hours for c in semester)} horas)')
         for course in semester:
-            print(course.hours, course.code, course.name)
+            print(f'   [{course.code}] {course.name}')
         print()
