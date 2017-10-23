@@ -36,6 +36,12 @@ class Digraph:
     def vertices(self):
         return set(self._successors.keys())
 
+    @property
+    def edges(self):
+        return [(v, w)
+                for v in self._successors
+                for w in self._successors[v]]
+
     def __len__(self):
         return len(self.vertices)
 
