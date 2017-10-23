@@ -6,8 +6,8 @@ def semesters(graph, done=None, max_hours=30):
     semester = []
     total = 0
     done = done or set()
-    available = {v for v in graph.vertices
-                 if not graph.predecessors(v)}
+    available = {v for v in graph.vertices - done
+                 if graph.predecessors(v).issubset(done)}
 
     while available:
         v = available.pop()
