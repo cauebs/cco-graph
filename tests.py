@@ -193,20 +193,6 @@ def test_outdegree():
     assert g.outdegree(5) == 0
 
 
-def test_is_complete():
-    total = 100
-    vertices = { 0, 1, 2 }
-    edges = { (0, 1), (0, 2), (1, 2) }
-    loops = { (0, 0), (1, 1), (2, 2) }
-    g = Digraph(vertices, edges)
-
-    assert g.is_complete() == True
-
-    g.remove_edge(0, 1)
-    g.remove_edge(1, 0)
-    assert g.is_complete() == False
-
-
 def test_transitive_closure():
     vertices = { 0, 1, 2, 3 }
     edges = [ (0, 1), (0, 2), (0, 3) ]

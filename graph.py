@@ -67,10 +67,6 @@ class Digraph:
     def outdegree(self, v):
         return len(self.successors(v))
 
-    def is_complete(self):
-        return all(self.degree(v) >= len(self) - 1
-                   for v in self.vertices)
-
     def transitive_closure(self, v):
         closure = set()
         pending = {v}
